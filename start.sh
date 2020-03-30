@@ -1,37 +1,25 @@
 #!/usr/bin/env bash
 
-if [ $NOASLR ]
-then
-    echo -n "
-	kernel.randomize_va_space=0
-    " >> /etc/sysctl.conf
-fi
+# echo "Remounting /proc for preventing users from seeing each other's processes..."
+mount -o remount,hidepid=2 /proc
 
-echo "Remounting /proc for preventing users from seeing each other's processes..."
-sudo mount -o remount,hidepid=2 /proc
-
-echo "Disabling read of others users' data on /tmp..."
+# echo "Disabling read of others users' data on /tmp..."
 chmod 1732 /tmp /var/tmp /dev/shm
 
-echo "Protect your files"
+# echo "Protect your files"
 chown root:root /pwnpeii
 chmod 700 /pwnpeii
 
-echo "Copying over resources"
-cp /pwnpeii/mount/* /home/problemuser
-
-echo "Changing ownership of problemuser..."
+# echo "Changing ownership of problemuser..."
 chown -R root:problemusers /home/problemuser
 
-echo "Setting permissions..."
+# echo "Setting permissions..."
 chmod 750 /home/problemuser
 chmod 550 -R /home/problemuser/*
-chmod 440 /home/problemuser/flag.txt
+chmod 440 -f /home/problemuser/flag.txt
+chmod 440 -f /home/problemuser/flag
 
-# For cgroups
-sudo cgconfigparser -l /etc/cgconfig.conf
-
-echo "Writing the xinetd conf file..."
+# echo "Writing the xinetd conf file..."
 echo "
 service ctf
 {
@@ -41,15 +29,15 @@ service ctf
 	wait        = no
 	user        = root
 	bind        = 0.0.0.0
-	per_source  = 3
+	per_source  = 32
 	cps         = 100 5
 	server      = /pwnpeii/scripts/runner.sh
-	port        = 9998
-}" | tee /etc/xinetd.d/ctf
+	port        = 6000
+}" > /etc/xinetd.d/ctf
 
-echo "Adding new service to /etc/services"
+# echo "Adding new service to /etc/services"
 echo "
-ctf 9998/tcp
+ctf 6000/tcp
 " >> /etc/services
 
 # Run xinetd
