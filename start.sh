@@ -33,7 +33,7 @@ service ctf
 	cps         = 100 5
 	server      = /pwnpeii/scripts/runner.sh
 	port        = 6000
-}" > /etc/xinetd.d/ctf
+}" | tee /etc/xinetd.d/ctf
 
 # echo "Adding new service to /etc/services"
 echo "
@@ -41,7 +41,7 @@ ctf 6000/tcp
 " >> /etc/services
 
 # Run xinetd
-/etc/init.d/xinetd start > /dev/null
+/etc/init.d/xinetd start
 
 # This runs forever
 /pwnpeii/scripts/cleanup.sh
