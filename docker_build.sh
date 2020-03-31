@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-docker build -t zenhackteam/pwnpeii:bionic-20200311 .
+docker build -t zxgio/pwnpeii:bionic-20200311 .
 
