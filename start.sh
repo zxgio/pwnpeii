@@ -41,7 +41,7 @@ ctf 6000/tcp
 " >> /etc/services
 
 # Run xinetd
-/etc/init.d/xinetd start
+/etc/init.d/xinetd start > /dev/null
 
 # This runs forever
 /pwnpeii/scripts/cleanup.sh
