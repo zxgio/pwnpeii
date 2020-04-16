@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 cd /home/problemuser && sudo -H -u problemuser firejail \
+     --quiet \
      --noprofile \
      --caps.drop=all \
      --net=none \
